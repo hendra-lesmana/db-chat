@@ -21,7 +21,7 @@ export class MySqlDatabaseService {
     let connectionPool;
     try {
       connectionPool = await mysql.createConnection(connection.connectionString);
-      
+
       // Get all tables
       const [tables] = await connectionPool.execute(
         "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE()"
@@ -32,7 +32,7 @@ export class MySqlDatabaseService {
 
       for (const table of tables) {
         const tableName = table.TABLE_NAME;
-        
+
         // Get columns for each table
         const [columns] = await connectionPool.execute(
           "SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE, COLUMN_DEFAULT " +
@@ -69,7 +69,7 @@ export class MySqlDatabaseService {
       connectionPool = await mysql.createConnection(connection.connectionString);
       const [rows] = await connectionPool.execute(query) as any[];
       await connectionPool.end();
-      
+
       if (!Array.isArray(rows) || rows.length === 0) {
         return [];
       }
@@ -77,7 +77,7 @@ export class MySqlDatabaseService {
       // Convert to array format for table display
       const headers = Object.keys(rows[0]);
       const result = [headers];
-      
+
       rows.forEach((row: any) => {
         result.push(headers.map(header => String(row[header] || '')));
       });
@@ -87,7 +87,14 @@ export class MySqlDatabaseService {
       if (connectionPool) {
         await connectionPool.end();
       }
-      throw new Error(`Query execution failed: ${error}`);
+
+      // Check if the error is related to unknown column
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      if (errorMessage.toLowerCase().includes('unknown column')) {
+        throw new Error(`Database query failed: ${errorMessage}. This error typically occurs when the query references a column that doesn't exist in the database. Please check if the column name in your query is correct based on your database schema.`);
+      } else {
+        throw new Error(`Query execution failed: ${errorMessage}`);
+      }
     }
   }
 }

@@ -18,7 +18,7 @@ export default function HomePage() {
   const [activeConnection, setActiveConnection] = useState<AIConnection | null>(null);
   const [dbSchema, setDbSchema] = useState<DatabaseSchema>({ schemaStructured: [], schemaRaw: [] });
   const [prompt, setPrompt] = useState('');
-  const [aiModel, setAiModel] = useState('gemma3:1b');
+  const [aiModel, setAiModel] = useState('gemini-2.5-flash');
   const [aiServiceType, setAiServiceType] = useState('Ollama');
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
@@ -36,6 +36,28 @@ export default function HomePage() {
   useEffect(() => {
     loadConnections();
   }, []);
+
+  useEffect(() => {
+    // Update default model based on selected AI service
+    let defaultModel = '';
+    switch (aiServiceType) {
+      case 'OpenAI':
+        defaultModel = 'gpt-3.5-turbo';
+        break;
+      case 'Anthropic':
+        defaultModel = 'claude-3-haiku-20240307';
+        break;
+      case 'Google':
+        defaultModel = 'gemini-2.5-flash';
+        break;
+      case 'Ollama':
+        defaultModel = 'llama3.2';
+        break;
+      default:
+        defaultModel = 'gemini-2.5-flash';
+    }
+    setAiModel(defaultModel);
+  }, [aiServiceType]);
 
   const loadConnections = async () => {
     try {
@@ -137,7 +159,8 @@ export default function HomePage() {
       await loadHistory(activeConnection.name);
 
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'An error occurred');
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred';
+      setError(errorMessage);
     } finally {
       setLoading(false);
       setLoadingMessage('');

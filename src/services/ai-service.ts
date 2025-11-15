@@ -51,12 +51,19 @@ Always include all of the table columns and details.`;
           }
         });
 
-        // Clean the response by removing markdown code blocks and newlines
-        const cleanedResponse = response.message.content
+        let cleanedResponse = response.message.content
           .replace(/```json/g, '')
           .replace(/```/g, '')
           .replace(/\n/g, ' ')
           .trim();
+
+        // Try to extract JSON object from the response
+        const jsonRegex = /\{.*\}/s;
+        const jsonMatch = cleanedResponse.match(jsonRegex);
+
+        if (jsonMatch) {
+          cleanedResponse = jsonMatch[0];
+        }
 
         return JSON.parse(cleanedResponse);
       } catch (error: any) {

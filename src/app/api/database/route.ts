@@ -7,7 +7,7 @@ const databaseService = new DatabaseManagerService();
 export async function POST(request: NextRequest) {
   try {
     const { connection, action, query } = await request.json();
-    
+
     if (!connection) {
       return NextResponse.json({ error: 'Connection is required' }, { status: 400 });
     }
@@ -16,25 +16,32 @@ export async function POST(request: NextRequest) {
       case 'test':
         const testResult = await databaseService.testConnection(connection);
         return NextResponse.json({ success: testResult });
-        
+
       case 'schema':
         const schema = await databaseService.generateSchema(connection);
         return NextResponse.json(schema);
-        
+
       case 'query':
         if (!query) {
           return NextResponse.json({ error: 'Query is required' }, { status: 400 });
         }
         const result = await databaseService.getDataTable(connection, query);
         return NextResponse.json({ data: result });
-        
+
       default:
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     }
   } catch (error) {
     console.error('Database API error:', error);
+    let errorMessage = error instanceof Error ? error.message : 'Database operation failed';
+
+    // Provide more user-friendly error message if it's an unknown column error
+    if (errorMessage.toLowerCase().includes('unknown column')) {
+      errorMessage = `Query failed due to an invalid column reference. ${errorMessage} Please review the database schema and make sure the column names in your query match exactly with the database schema (case-sensitive).`;
+    }
+
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Database operation failed' },
+      { error: errorMessage },
       { status: 500 }
     );
   }

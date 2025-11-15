@@ -1,36 +1,186 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DBChatPro Next.js
+
+A Next.js port of the DBChatPro Blazor application that allows you to chat with your databases using AI.
+
+## Features
+
+- 🔌 Connect to multiple databases (MySQL, PostgreSQL, SQL Server)
+- 🤖 AI-powered SQL query generation using OpenAI
+- 💬 Chat interface for analyzing query results
+- 📊 Visual query results with data tables
+- 🔖 Save and manage favorite queries
+- 📜 Query history tracking
+- 🔒 Local storage for connection strings and API keys
+- 📱 Responsive design with Tailwind CSS
+
+## Tech Stack
+
+- **Frontend**: Next.js 14, React 18, TypeScript, Tailwind CSS
+- **AI Integration**: OpenAI SDK, AI SDK
+- **Database**: MySQL2, pg (PostgreSQL), mssql (SQL Server)
+- **UI Components**: Lucide React, Radix UI
+- **State Management**: React hooks and context
+- **Storage**: Browser localStorage
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ 
+- npm or yarn
+- OpenAI API key
+- Database connections (MySQL, PostgreSQL, or SQL Server)
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd dbchatpro-nextjs
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Set up environment variables:
+```bash
+cp .env.local.example .env.local
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Edit `.env.local` and add your OpenAI API key:
+```
+NEXT_PUBLIC_OPENAI_API_KEY=your_openai_api_key_here
+```
 
-## Learn More
+4. Run the development server:
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Configuration
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### AI Providers
 
-## Deploy on Vercel
+The application supports multiple AI providers:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+#### OpenAI (Recommended)
+- Set `NEXT_PUBLIC_OPENAI_API_KEY` in your `.env.local` file
+- Use models like `gpt-3.5-turbo` or `gpt-4`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+#### Azure OpenAI (Optional)
+- Set `NEXT_PUBLIC_AZURE_OPENAI_ENDPOINT` and optionally `NEXT_PUBLIC_AZURE_OPENAI_KEY`
+- Configure your Azure OpenAI deployment
+
+#### Ollama (Optional)
+- Set `NEXT_PUBLIC_OLLAMA_ENDPOINT` (default: `http://localhost:11434`)
+- Run Ollama locally with your preferred models
+
+### Database Connections
+
+The application supports three database types:
+
+#### MySQL
+Connection string format:
+```
+mysql://username:password@localhost:3306/database_name
+```
+
+#### PostgreSQL  
+Connection string format:
+```
+postgresql://username:password@localhost:5432/database_name
+```
+
+#### SQL Server
+Connection string format:
+```
+Server=localhost;Database=database_name;User Id=username;Password=password;
+```
+
+## Usage
+
+1. **Connect Database**: Go to "Connect Database" page and add your database connection
+2. **Test Connection**: Click "Test Connection" to verify connectivity and load schema
+3. **Save Connection**: Save the connection for future use
+4. **Chat with Database**: 
+   - Select your database from the dropdown
+   - Choose your AI model and service
+   - Enter your question in natural language
+   - Submit to generate and execute SQL queries
+5. **Analyze Results**: Use the chat feature to get insights about your query results
+6. **Save Favorites**: Save frequently used queries as favorites
+
+## Security Notes
+
+- Connection strings are stored locally in browser localStorage
+- API keys are stored locally and never sent to external services except the AI provider
+- For production deployment, consider implementing secure backend storage
+- Database connections are tested client-side only
+
+## Deployment
+
+### Vercel (Recommended)
+
+1. Push your code to GitHub
+2. Import your repository on [Vercel](https://vercel.com)
+3. Add your environment variables in the Vercel dashboard
+4. Deploy!
+
+### Docker
+
+Build and run with Docker:
+```bash
+docker build -t dbchatpro-nextjs .
+docker run -p 3000:3000 --env-file .env.local dbchatpro-nextjs
+```
+
+### Manual Deployment
+
+1. Build the application:
+```bash
+npm run build
+```
+
+2. Start the production server:
+```bash
+npm start
+```
+
+## Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `NEXT_PUBLIC_OPENAI_API_KEY` | OpenAI API key | Yes (for OpenAI) |
+| `NEXT_PUBLIC_AZURE_OPENAI_ENDPOINT` | Azure OpenAI endpoint | No |
+| `NEXT_PUBLIC_AZURE_OPENAI_KEY` | Azure OpenAI key | No |
+| `NEXT_PUBLIC_OLLAMA_ENDPOINT` | Ollama endpoint URL | No |
+| `NEXT_PUBLIC_MAX_ROWS` | Maximum rows per query (default: 100) | No |
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Support
+
+For issues and questions:
+1. Check the existing issues on GitHub
+2. Create a new issue with detailed information
+3. Include error messages, steps to reproduce, and your environment details
+
+## Acknowledgments
+
+- Original Blazor application by the DBChatPro team
+- OpenAI for providing the AI models
+- The Next.js and React communities for excellent tools and documentation

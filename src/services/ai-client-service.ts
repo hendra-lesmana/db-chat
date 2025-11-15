@@ -19,11 +19,11 @@ export class AIClientService {
         databaseType
       })
     });
-    
+
     if (!response.ok) {
       throw new Error('AI query generation failed');
     }
-    
+
     return await response.json();
   }
 

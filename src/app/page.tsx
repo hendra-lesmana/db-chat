@@ -18,8 +18,8 @@ export default function HomePage() {
   const [activeConnection, setActiveConnection] = useState<AIConnection | null>(null);
   const [dbSchema, setDbSchema] = useState<DatabaseSchema>({ schemaStructured: [], schemaRaw: [] });
   const [prompt, setPrompt] = useState('');
-  const [aiModel, setAiModel] = useState('gpt-3.5-turbo');
-  const [aiServiceType, setAiServiceType] = useState('OpenAI');
+  const [aiModel, setAiModel] = useState('gemma3:1b');
+  const [aiServiceType, setAiServiceType] = useState('Ollama');
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
   const [error, setError] = useState('');
@@ -41,7 +41,7 @@ export default function HomePage() {
     try {
       const conns = await connectionService.getAIConnections();
       setConnections(conns);
-      
+
       if (conns.length > 0 && !activeConnection) {
         const firstConnection = conns[0];
         setActiveConnection(firstConnection);
@@ -255,7 +255,10 @@ export default function HomePage() {
                   value={aiServiceType}
                   onChange={(e) => setAiServiceType(e.target.value)}
                 >
+                  <option value="Ollama">Ollama</option>
                   <option value="OpenAI">OpenAI</option>
+                  <option value="Anthropic">Anthropic</option>
+                  <option value="Google">Google</option>
                 </select>
               </div>
 
@@ -408,18 +411,17 @@ export default function HomePage() {
                 <MessageSquare className="h-5 w-5 mr-2" />
                 Chat with AI
               </h3>
-              
+
               <div className="space-y-4 mb-4 max-h-64 overflow-y-auto">
                 {chatHistory.map((message, index) => (
                   <div
                     key={index}
-                    className={`p-3 rounded-lg ${
-                      message.role === 'user'
+                    className={`p-3 rounded-lg ${message.role === 'user'
                         ? 'bg-blue-50 ml-8'
                         : message.role === 'assistant'
-                        ? 'bg-gray-50 mr-8'
-                        : 'bg-green-50'
-                    }`}
+                          ? 'bg-gray-50 mr-8'
+                          : 'bg-green-50'
+                      }`}
                   >
                     <div className="text-sm font-medium text-gray-700 mb-1">
                       {message.role === 'user' ? 'You' : message.role === 'assistant' ? 'AI Assistant' : 'System'}:
@@ -464,7 +466,7 @@ export default function HomePage() {
                 <History className="h-5 w-5 mr-2" />
                 Query History
               </h3>
-              
+
               <div className="space-y-2 max-h-64 overflow-y-auto">
                 {history.map((item, index) => (
                   <button

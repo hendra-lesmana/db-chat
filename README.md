@@ -1,6 +1,6 @@
 # DBChatPro Next.js
 
-A Next.js port of the DBChatPro Blazor application that allows you to chat with your databases using AI.
+A Next.js application that allows you to chat with your databases using AI. Connect to multiple databases (MySQL, PostgreSQL, SQL Server) and generate SQL queries using natural language with the power of AI.
 
 ## Features
 
@@ -26,7 +26,7 @@ A Next.js port of the DBChatPro Blazor application that allows you to chat with 
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 - OpenAI API key
 - Database connections (MySQL, PostgreSQL, or SQL Server)
@@ -36,7 +36,7 @@ A Next.js port of the DBChatPro Blazor application that allows you to chat with 
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd dbchatpro-nextjs
+cd db-chat
 ```
 
 2. Install dependencies:
@@ -89,7 +89,7 @@ Connection string format:
 mysql://username:password@localhost:3306/database_name
 ```
 
-#### PostgreSQL  
+#### PostgreSQL
 Connection string format:
 ```
 postgresql://username:password@localhost:5432/database_name
@@ -106,7 +106,7 @@ Server=localhost;Database=database_name;User Id=username;Password=password;
 1. **Connect Database**: Go to "Connect Database" page and add your database connection
 2. **Test Connection**: Click "Test Connection" to verify connectivity and load schema
 3. **Save Connection**: Save the connection for future use
-4. **Chat with Database**: 
+4. **Chat with Database**:
    - Select your database from the dropdown
    - Choose your AI model and service
    - Enter your question in natural language
@@ -114,12 +114,16 @@ Server=localhost;Database=database_name;User Id=username;Password=password;
 5. **Analyze Results**: Use the chat feature to get insights about your query results
 6. **Save Favorites**: Save frequently used queries as favorites
 
-## Security Notes
+## Environment Variables
 
-- Connection strings are stored locally in browser localStorage
-- API keys are stored locally and never sent to external services except the AI provider
-- For production deployment, consider implementing secure backend storage
-- Database connections are tested client-side only
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `NEXT_PUBLIC_OPENAI_API_KEY` | OpenAI API key | Yes (for OpenAI) |
+| `NEXT_PUBLIC_AZURE_OPENAI_ENDPOINT` | Azure OpenAI endpoint | No |
+| `NEXT_PUBLIC_AZURE_OPENAI_KEY` | Azure OpenAI key | No |
+| `NEXT_PUBLIC_GOOGLE_GENERATIVE_AI_API_KEY` | Google Generative AI API key | No |
+| `NEXT_PUBLIC_OLLAMA_ENDPOINT` | Ollama endpoint URL | No |
+| `NEXT_PUBLIC_MAX_ROWS` | Maximum rows per query (default: 100) | No |
 
 ## Deployment
 
@@ -150,37 +154,6 @@ npm run build
 npm start
 ```
 
-## Environment Variables
-
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `NEXT_PUBLIC_OPENAI_API_KEY` | OpenAI API key | Yes (for OpenAI) |
-| `NEXT_PUBLIC_AZURE_OPENAI_ENDPOINT` | Azure OpenAI endpoint | No |
-| `NEXT_PUBLIC_AZURE_OPENAI_KEY` | Azure OpenAI key | No |
-| `NEXT_PUBLIC_OLLAMA_ENDPOINT` | Ollama endpoint URL | No |
-| `NEXT_PUBLIC_MAX_ROWS` | Maximum rows per query (default: 100) | No |
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Support
-
-For issues and questions:
-1. Check the existing issues on GitHub
-2. Create a new issue with detailed information
-3. Include error messages, steps to reproduce, and your environment details
-
-## Acknowledgments
-
-- Original Blazor application by the DBChatPro team
-- OpenAI for providing the AI models
-- The Next.js and React communities for excellent tools and documentation
